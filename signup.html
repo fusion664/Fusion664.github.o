@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Créer un compte</h1>
+        <form id="signupForm">
+            <label for="firstName">Prénom</label>
+            <input type="text" id="firstName" placeholder="Entrez votre prénom" required>
+
+            <label for="lastName">Nom</label>
+            <input type="text" id="lastName" placeholder="Entrez votre nom" required>
+
+            <label for="phone">Numéro de téléphone</label>
+            <input type="tel" id="phone" placeholder="Entrez votre numéro de téléphone" required>
+
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" placeholder="Entrez votre email" required>
+
+            <label for="country">Pays (optionnel)</label>
+            <select id="country">
+                <option value="">Sélectionnez un pays</option>
+                <option value="benin">Bénin</option>
+                <option value="burkina">Burkina Faso</option>
+                <option value="cameroun">Cameroun</option>
+                <option value="congo_brazzaville">Congo Brazzaville</option>
+                <option value="congo_kinshasa">Congo Kinshasa</option>
+                <option value="cote_ivoire">Côte d'Ivoire</option>
+                <option value="gabon">Gabon</option>
+                <option value="guinee">Guinée Conakry</option>
+                <option value="mali">Mali</option>
+                <option value="niger">Niger</option>
+                <option value="rca">RCA</option>
+                <option value="senegal">Sénégal</option>
+                <option value="tchad">Tchad</option>
+                <option value="togo">Togo</option>
+            </select>
+
+            <label for="income">Revenu Mensuel</label>
+            <input type="number" id="income" placeholder="Exemple : 100000" required>
+
+            <label for="activity">Activités</label>
+            <input type="text" id="activity" placeholder="Votre activité professionnelle" required>
+
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" placeholder="Créez un mot de passe" required>
+
+            <label for="confirmPassword">Confirmez le mot de passe</label>
+            <input type="password" id="confirmPassword" placeholder="Confirmez votre mot de passe" required>
+
+            <p id="passwordHint" class="hint">Mot de passe : minimum 8 caractères, une majuscule, un chiffre, un symbole</p>
+
+            <button type="submit">S'inscrire</button>
+        </form>
+        <p>Déjà inscrit ? <a href="index.html">Se connecter</a></p>
+    </div>
+</body>
+</html>

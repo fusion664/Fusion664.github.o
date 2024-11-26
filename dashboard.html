@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body class="dark-mode">
+    <header>
+        <h1>Tableau de bord</h1>
+    </header>
+    <main>
+        <section class="dashboard">
+            <!-- Bloc Profil -->
+            <div class="card profile">
+                <h2>Profil</h2>
+                <p><strong>Nom :</strong> <span id="userName">-</span></p>
+                <p><strong>Email :</strong> <span id="userEmail">-</span></p>
+                <p><strong>Pays :</strong> <span id="userCountry">-</span></p>
+                <p><strong>Téléphone :</strong> <span id="userPhone">-</span></p>
+            </div>
+
+            <!-- Bloc Solde -->
+            <div class="card balance">
+                <h2>Solde</h2>
+                <p><strong>Solde disponible :</strong> <span id="userBalance">0</span> FCFA</p>
+            </div>
+
+            <!-- Bloc Boutons -->
+            <div class="card actions">
+                <button id="depositButton">Déposer</button>
+                <button id="investButton">Je veux investir</button>
+                <button id="whatsappButton">WhatsApp</button>
+            </div>
+        </section>
+
+        <!-- Simulation TradingView -->
+        <section class="trading-view">
+            <h2>AFRICA INVESTISSEMENT</h2>
+            <div id="tradingViewContainer">[Simulation]</div>
+        </section>
+    </main>
+
+    <div id="depositModal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Options de dépôt</h2>
+            <select id="paymentOptions">
+                <option value="orange">Orange Money</option>
+                <option value="mtn">MTN Money</option>
+                <option value="moov">Moov Money</option>
+            </select>
+            <button id="proceedDeposit">Poursuivre</button>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bénéfices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .block {
+            padding: 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .block h2 {
+            margin: 10px 0;
+            font-size: 20px;
+        }
+
+        .block p {
+            font-size: 16px;
+        }
+
+        .trading-view {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #withdrawButton {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 15px;
+            font-size: 16px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #withdrawButton:hover {
+            background: #218838;
+        }
+
+        .withdraw-options, .withdraw-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .withdraw-options button {
+            margin: 10px 5px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .withdraw-options button:hover {
+            background: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .submit-withdrawal {
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-withdrawal:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tableau de bord</h1>
+
+        <div class="dashboard">
+            <!-- Bloc 1 : Profil -->
+            <div class="block" id="profileBlock">
+                <h2>Profil</h2>
+                <p id="profileInfo">Chargement des informations...</p>
+            </div>
+
+            <!-- Bloc 2 : Solde -->
+            <div class="block" id="balanceBlock">
+                <h2>Solde actuel</h2>
+                <p id="balanceInfo">Chargement...</p>
+            </div>
+
+            <!-- Bloc 3 : Simulation BTC/USDT -->
+            <div class="block" id="cryptoBlock">
+                <h2>Prix BTC/USDT</h2>
+                <p id="btcPrice">Chargement...</p>
+                <p id="btcIndex">Chargement...</p>
+            </div>
+        </div>
+
+        <!-- Section Trading View -->
+        <div class="trading-view">
+            <h2>Simulation Trading View</h2>
+            <iframe src="https://s.tradingview.com/embed-widget/"></iframe>
+        </div>
+
+        <!-- Bouton Retrait -->
+        <button id="withdrawButton">Retirer</button>
+
+        <!-- Options de Retrait -->
+        <div class="withdraw-options" id="withdrawOptions">
+            <h3>Choisissez votre mode de retrait :</h3>
+            <button data-mode="bank">Banque</button>
+            <button data-mode="mobile">Mobile</button>
+            <button data-mode="electronic">Électronique</button>
+        </div>
+
+        <!-- Formulaire de Retrait -->
+        <div class="withdraw-form" id="withdrawForm">
+            <h3>Formulaire de retrait</h3>
+            <form id="withdrawRequestForm">
+                <div id="withdrawInputs"></div>
+                <button type="submit" class="submit-withdrawal">Retirer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Charger les données
+        const profileData = JSON.parse(localStorage.getItem('investmentData')) || {};
+        const profileBlock = document.getElementById('profileInfo');
+        const balanceBlock = document.getElementById('balanceInfo');
+        const btcPriceElement = document.getElementById('btcPrice');
+        const btcIndexElement = document.getElementById('btcIndex');
+        const withdrawButton = document.getElementById('withdrawButton');
+        const withdrawOptions = document.getElementById('withdrawOptions');
+        const withdrawForm = document.getElementById('withdrawForm');
+        const withdrawInputs = document.getElementById('withdrawInputs');
+
+        // Calcul du solde
+        const bonus = profileData.toReceive ? profileData.toReceive * 0.3 : 0;
+        const totalBalance = (profileData.toReceive || 0) + bonus;
+
+        // Afficher les données du profil et du solde
+        profileBlock.innerHTML = `
+            <p><strong>Nom :</strong> ${profileData.name || 'N/A'}</p>
+            <p><strong>Pays :</strong> ${profileData.country || 'N/A'}</p>
+            <p><strong>Transaction :</strong> ${profileData.transactionNumber || 'N/A'}</p>
+        `;
+        balanceBlock.innerHTML = `<p>${totalBalance.toFixed(2)} ${profileData.currency || 'USD'}</p>`;
+
+        // Mise à jour dynamique des prix BTC/USDT
+        function updateCryptoData() {
+            const randomPrice = (35000 + Math.random() * 2000 - 1000).toFixed(2);
+            const randomIndex = (Math.random() * 5 - 2.5).toFixed(2);
+            btcPriceElement.textContent = `${randomPrice} USD`;
+            btcIndexElement.textContent = `Variation : ${randomIndex}%`;
+        }
+        setInterval(updateCryptoData, 1000);
+
+        // Gestion du bouton retrait
+        withdrawButton.addEventListener('click', () => {
+            withdrawOptions.style.display = 'block';
+        });
+
+        withdrawOptions.addEventListener('click', (e) => {
+            const mode = e.target.getAttribute('data-mode');
+            if (mode) {
+                withdrawOptions.style.display = 'none';
+                withdrawForm.style.display = 'block';
+
+                if (mode === 'bank') {
+                    withdrawInputs.innerHTML = `
+                        <label>Nom de la banque :</label>
+                        <input type="text" value="Banque Populaire (${profileData.country})" readonly>
+                        <label>Numéro de compte :</label>
+                        <input type="text" required>
+                        <label>Montant :</label>
+                        <input type="text" value="${totalBalance.toFixed(2)} USD" readonly>
+                    `;
+                } else if (mode === 'mobile') {
+                    withdrawInputs.innerHTML = `
+                        <label>Nom :</label>
+                        <input type="text" value="${profileData.name}" readonly>
+                        <label>Réseau :</label>
+                        <input type="text" value="Mobile (${profileData.country})" readonly>
+                        <label>Montant :</label>
+                        <input type="text" value="${totalBalance.toFixed(2)} USD" readonly>
+                    `;
+                } else if (mode === 'electronic') {
+                    withdrawInputs.innerHTML = `
+                        <label>Email ou Téléphone :</label>
+                        <input type="text" required>
+                        <label>Nom :</label>
+                        <input type="text" value="${profileData.name}" readonly>
+                        <label>Montant :</label>
+                        <input type="text" value="${totalBalance.toFixed(2)} USD"
+                        readonly>
+                    `;
+                }
+            }
+        });
+
+        // Gestion du formulaire de retrait
+        document.getElementById('withdrawRequestForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert(`Mr/Mme ${profileData.name}, veuillez payer les frais de carte d'investisseurs dans les 5 minutes pour terminer l'opération de retrait.`);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte d'Investisseur</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="card-container">
+    <header>
+      <h1>AFRICA INVESTISSEMENT</h1>
+      <p>Date de création : <span id="creation-date"></span></p>
+    </header>
+
+    <div class="investor-card">
+      <div class="photo-section">
+        <label for="upload-photo">Télécharger une photo :</label>
+        <input type="file" id="upload-photo" accept="image/*">
+      </div>
+      <div class="info-section">
+        <p>Nom : John Doe</p>
+        <p>Téléphone : +221 777123456</p>
+        <p>Pays : Sénégal</p>
+      </div>
+      <div class="qr-section">
+        <p>QR Code :</p>
+        <canvas id="qr-code"></canvas>
+      </div>
+    </div>
+
+    <button id="complete-withdrawal">Terminer le Retrait</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    // Date de création
+    document.getElementById("creation-date").textContent = new Date().toLocaleDateString("fr-FR");
+
+    // Génération du QR Code
+    QRCode.toCanvas(document.getElementById("qr-code"), "John Doe - Sénégal", function (error) {
+      if (error) console.error(error);
+    });
+
+    document.getElementById("complete-withdrawal").addEventListener("click", function () {
+      alert("Retrait terminé avec succès !");
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire d'Investissement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        input:focus, select:focus, button:focus {
+            outline: none;
+            border-color: #28a745;
+        }
+        button {
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .phone-group {
+            display: flex;
+            align-items: center;
+        }
+        .phone-group input {
+            flex: 1;
+        }
+        .phone-group span {
+            margin-right: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulaire d'Investissement</h1>
+        <form id="investmentForm">
+            <label for="country">Pays</label>
+            <select id="country" required>
+                <option value="" disabled selected>Sélectionnez votre pays</option>
+                <option value="CM" data-code="+237" data-currency="FCFA" data-payment="Mobile Money, Virement Bancaire">Cameroun</option>
+                <option value="SN" data-code="+221" data-currency="FCFA" data-payment="Wave, Mobile Money">Sénégal</option>
+                <option value="CI" data-code="+225" data-currency="FCFA" data-payment="Orange Money, MTN Money">Côte d'Ivoire</option>
+                <option value="GN" data-code="+224" data-currency="GNF" data-payment="MTN Money, Virement Bancaire">Guinée Conakry</option>
+                <option value="CD" data-code="+243" data-currency="USD" data-payment="Mpesa, Airtel Money">Congo Kinshasa</option>
+                <!-- Ajouter les autres pays ici -->
+            </select>
+
+            <label for="investorName">Nom de l'investisseur</label>
+            <input type="text" id="investorName" placeholder="Entrez votre nom" required>
+
+            <label for="phone">Numéro de téléphone</label>
+            <div class="phone-group">
+                <span id="countryCode">+--- </span>
+                <input type="tel" id="phone" placeholder="Entrez votre numéro" required>
+            </div>
+            <span class="error" id="phoneError"></span>
+
+            <label for="transactionNumber">Numéro de transaction</label>
+            <input type="text" id="transactionNumber" placeholder="Entrez le numéro de transaction" required>
+
+            <label for="paymentMethod">Mode de paiement</label>
+            <select id="paymentMethod" required>
+                <option value="" disabled selected>Sélectionnez un mode de paiement</option>
+            </select>
+
+            <label for="amountToInvest">Montant à investir</label>
+            <select id="amountToInvest" required>
+                <!-- Options générées dynamiquement -->
+            </select>
+
+            <label for="amountToReceive">Montant à recevoir</label>
+            <input type="text" id="amountToReceive" readonly>
+
+            <button type="submit">Enregistrer</button>
+        </form>
+    </div>
+
+    <script>
+        const countrySelect = document.getElementById('country');
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
+        const countryCodeSpan = document.getElementById('countryCode');
+        const paymentMethodSelect = document.getElementById('paymentMethod');
+        const amountToInvest = document.getElementById('amountToInvest');
+        const amountToReceive = document.getElementById('amountToReceive');
+        const form = document.getElementById('investmentForm');
+
+        const countryData = {
+            "FCFA": [100000, 200000, 300000, 400000, 500000],
+            "USD": [100, 200, 300, 400, 500],
+            "GNF": [1000000, 2000000, 3000000, 4000000, 5000000]
+        };
+
+        const rates = {
+            "FCFA": 6.5,
+            "USD": 6.5,
+            "GNF": 6.5
+        };
+
+        // Mettre à jour les données en fonction du pays sélectionné
+        countrySelect.addEventListener('change', () => {
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+            const code = selectedOption.dataset.code;
+            const currency = selectedOption.dataset.currency;
+            const payments = selectedOption.dataset.payment.split(", ");
+
+            // Mettre à jour l'indicatif du pays
+            countryCodeSpan.textContent = code;
+
+            // Mettre à jour les modes de paiement
+            paymentMethodSelect.innerHTML = payments.map(payment => `<option value="${payment}">${payment}</option>`).join('');
+
+            // Mettre à jour les montants à investir
+            amountToInvest.innerHTML = countryData[currency]
+                .map(amount => `<option value="${amount}">${amount} ${currency}</option>`)
+                .join('');
+        });
+
+        // Calculer automatiquement le montant à recevoir
+        amountToInvest.addEventListener('change', () => {
+            const selectedAmount = parseFloat(amountToInvest.value);
+            const selectedCurrency = countrySelect.options[countrySelect.selectedIndex].dataset.currency;
+            const multiplier = rates[selectedCurrency];
+            amountToReceive.value = `${(selectedAmount * multiplier).toLocaleString()} ${selectedCurrency}`;
+        });
+
+        // Valider le numéro de téléphone
+        phoneInput.addEventListener('input', () => {
+            const selectedOption = countrySelect.options[countrySelect.selectedIndex];
+            const countryCode = selectedOption.value;
+
+            // Exemple pour le Cameroun (9 chiffres)
+            if (countryCode === "CM" && phoneInput.value.length !== 9) {
+                phoneError.textContent = "Le numéro doit contenir exactement 9 chiffres.";
+            } else {
+                phoneError.textContent = "";
+            }
+        });
+
+        // Soumettre le formulaire
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = {
+                country: countrySelect.options[countrySelect.selectedIndex].text,
+                name: document.getElementById('investorName').value,
+                phone: phoneInput.value,
+                transactionNumber: document.getElementById('transactionNumber').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                amountToInvest: amountToInvest.value,
+                amountToReceive: amountToReceive.value
+            };
+
+            // Enregistrer les données dans localStorage
+            localStorage.setItem('investmentData', JSON.stringify(formData));
+
+            // Rediriger vers curve.html
+            window.location.href = 'curve.html';
+        });
+    </script>
+</body>
+</html>

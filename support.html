@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+            background: #f1f1f1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .contact-info h3 {
+            margin: 0 0 10px;
+            color: #333;
+        }
+
+        .contact-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .success-message {
+            text-align: center;
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-message {
+            text-align: center;
+            margin-top: 20px;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Support Client</h1>
+        <p>Besoin d'aide ? Veuillez remplir le formulaire ci-dessous ou utilisez nos coordonnées pour nous contacter.</p>
+
+        <!-- Formulaire de contact -->
+        <form id="supportForm">
+            <label for="name">Nom complet :</label>
+            <input type="text" id="name" placeholder="Entrez votre nom complet" required>
+
+            <label for="email">Adresse email :</label>
+            <input type="email" id="email" placeholder="Entrez votre adresse email" required>
+
+            <label for="issueType">Type de problème :</label>
+            <select id="issueType" required>
+                <option value="">-- Sélectionnez une option --</option>
+                <option value="investissement_bloqué">Investissement bloqué</option>
+                <option value="problème_paiement">Problème de paiement</option>
+                <option value="erreur_code">Erreur de code</option>
+                <option value="autre">Autre</option>
+            </select>
+
+            <label for="message">Message :</label>
+            <textarea id="message" placeholder="Décrivez votre problème en détail" required></textarea>
+
+            <button type="submit">Envoyer</button>
+        </form>
+
+        <!-- Informations de contact -->
+        <div class="contact-info">
+            <h3>Nous contacter directement</h3>
+            <p><strong>Email :</strong> support@votreentreprise.com</p>
+            <p><strong>Téléphone :</strong> +1 800 123 456</p>
+            <p><strong>Adresse :</strong> 123 Rue de l'Investissement, Ville, Pays</p>
+        </div>
+
+        <!-- Message de succès ou d'erreur -->
+        <div id="feedbackMessage"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('supportForm');
+        const feedbackMessage = document.getElementById('feedbackMessage');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Récupération des données du formulaire
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const issueType = document.getElementById('issueType').value;
+            const message = document.getElementById('message').value.trim();
+
+            // Vérification des champs
+            if (!name || !email || !issueType || !message) {
+                feedbackMessage.innerHTML = '<p class="error-message">Veuillez remplir tous les champs.</p>';
+                return;
+            }
+
+            // Simuler l'envoi (vous pouvez remplacer cela par un appel API ou un enregistrement local)
+            feedbackMessage.innerHTML = '<p class="success-message">Merci, votre message a été envoyé avec succès ! Nous vous contacterons bientôt.</p>';
+
+            // Réinitialiser le formulaire
+            form.reset();
+        });
+    </script>
+</body>
+</html>
